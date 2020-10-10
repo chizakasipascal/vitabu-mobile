@@ -5,7 +5,7 @@ class EmpruntScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        child: Text("REMISE"),
+        child: Text("EMPRUNT"),
       ),
     );
   }

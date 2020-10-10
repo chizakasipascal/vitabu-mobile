@@ -7,8 +7,11 @@ class AcquisitionScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text("Acquisition"),
-          automaticallyImplyLeading: true,
+          title: Text(
+            "Acquisition",
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          automaticallyImplyLeading: false,
           actions: [
             IconButton(
               icon: Icon(Icons.close),
