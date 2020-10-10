@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 24),
                   Button(
-                    caption: "Connexion",
+                    caption: "CONNEXION",
                     onPressed: () => Navigator.pushReplacementNamed(
                       context,
                       Routes.home,

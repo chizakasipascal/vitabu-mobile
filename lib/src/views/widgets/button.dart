@@ -19,7 +19,9 @@ class Button extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           caption,
-          style: Theme.of(context).textTheme.subtitle1,
+          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                color: Colors.white,
+              ),
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
