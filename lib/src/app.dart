@@ -4,13 +4,13 @@ import 'views/screens/home.dart';
 import 'views/screens/login.dart';
 
 class VitabuApp extends StatelessWidget {
-  final Widget _defaultPage = LoginPage();
+  final Widget _defaultPage = LoginScreen();
 
   VitabuApp({Key key}) : super(key: key);
 
   final _routes = <String, WidgetBuilder>{
-    LoginPage.tag: (context) => LoginPage(),
-    HomePage.tag: (context) => HomePage(),
+    LoginScreen.tag: (context) => LoginScreen(),
+    HomeScreen.tag: (context) => HomeScreen(),
   };
 
   @override

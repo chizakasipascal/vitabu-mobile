@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:vitabu/src/utils/color.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   static String tag = "login";
-  LoginPage({Key key}) : super(key: key);
+  LoginScreen({Key key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   double screenHeight, screenWidth;
   bool _log = false;
   final _key = GlobalKey<FormState>();
