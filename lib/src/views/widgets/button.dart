@@ -6,7 +6,7 @@ class Button extends StatelessWidget {
   final OnPressed onPressed;
   final String caption;
 
-  const Button({Key key, this.onPressed, this.caption});
+  const Button({Key key, this.onPressed, this.caption}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
