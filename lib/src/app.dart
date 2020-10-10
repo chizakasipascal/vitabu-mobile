@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'views/screens/home.dart';
+import 'constants/routes.dart';
+import 'constants/theme.dart';
 import 'views/screens/login.dart';
 
 class VitabuApp extends StatelessWidget {
@@ -8,19 +9,14 @@ class VitabuApp extends StatelessWidget {
 
   VitabuApp({Key key}) : super(key: key);
 
-  final _routes = <String, WidgetBuilder>{
-    LoginScreen.tag: (context) => LoginScreen(),
-    HomeScreen.tag: (context) => HomeScreen(),
-  };
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: themeData,
       title: 'Vitabu',
       home: _defaultPage,
-      initialRoute: '/',
-      routes: _routes,
+      routes: Routes.routesList,
     );
   }
 }

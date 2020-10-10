@@ -10,7 +10,7 @@ class Routes {
   static const String remise = "/remise";
   static const String acquisition = "/acquisition";
 
-  static final routes = <String, WidgetBuilder>{
+  static final routesList = <String, WidgetBuilder>{
     login: (BuildContext context) => LoginScreen(),
     home: (BuildContext context) => HomeScreen(),
     emprunt: (BuildContext context) => EmpruntScreen(),
