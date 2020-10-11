@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 
+import 'constants/routes.dart';
+import 'constants/theme.dart';
+import 'views/screens/login.dart';
+
 class VitabuApp extends StatelessWidget {
-  const VitabuApp({Key key}) : super(key: key);
+  final Widget _defaultPage = LoginScreen();
+
+  VitabuApp({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: themeData,
+      title: 'Vitabu',
+      home: _defaultPage,
+      routes: Routes.routesList,
     );
   }
 }
