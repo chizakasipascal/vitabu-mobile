@@ -22,4 +22,5 @@ final ThemeData themeData = ThemeData(
     color: Colors.transparent,
     elevation: 0.3,
   ),
+  scaffoldBackgroundColor: Colors.grey[300],
 );

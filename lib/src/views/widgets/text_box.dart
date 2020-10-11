@@ -10,9 +10,10 @@ Widget buildTextBox(String hint,
     String label,
     Validator validator,
     OnSaved onSaved,
+    int maxLines = 1,
     TextInputType inputType = TextInputType.text,
     EdgeInsetsGeometry contentPadding =
-        const EdgeInsets.fromLTRB(20.0, 20.0, 30.0, 10.0),
+        const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
     bool enable = true,
     bool isPassword = false}) {
   return TextFormField(
@@ -20,6 +21,7 @@ Widget buildTextBox(String hint,
     keyboardType: inputType,
     obscureText: isPassword,
     controller: controller,
+    maxLines: maxLines,
     decoration: InputDecoration(
       filled: true,
       fillColor: Colors.white,
