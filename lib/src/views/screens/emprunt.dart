@@ -130,7 +130,7 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
                 flex: 1,
                 child: IconButton(
                   icon: Icon(
-                    Icons.add_circle,
+                    Icons.remove_circle,
                     size: 38,
                   ),
                   onPressed: () {},
@@ -140,7 +140,7 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
                 flex: 1,
                 child: IconButton(
                   icon: Icon(
-                    Icons.remove_circle,
+                    Icons.add_circle,
                     size: 38,
                   ),
                   onPressed: () {},

@@ -75,11 +75,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   PopupMenuItem<String>(
-                    child: Text("A propos"),
+                    child: FlatButton(
+                      onPressed: () {},
+                      child: const Text("A propos"),
+                    ),
                   ),
                   PopupMenuItem<String>(
-                    child: Text("Aide"),
-                  )
+                    child: FlatButton(
+                      onPressed: () {},
+                      child: const Text("..."),
+                    ),
+                  ),
                 ];
               },
             ),
