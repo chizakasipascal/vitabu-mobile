@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vitabu/src/views/widgets/button.dart';
+import 'package:vitabu/src/views/widgets/scan_button.dart';
 import 'package:vitabu/src/views/widgets/text_box.dart';
 
 class RemiseScreen extends StatefulWidget {
@@ -16,27 +17,51 @@ class _RemiseScreenState extends State<RemiseScreen> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(30, 30, 30, 10),
         children: [
+          ScanButton(
+            caption: "Remise",
+            onTap: () {},
+          ),
+          SizedBox(
+            height: 20,
+            child: Center(
+              child: Container(
+                height: 1,
+                color: Theme.of(context).cursorColor,
+              ),
+            ),
+          ),
           SizedBox(
             child: buildTextBox(
               "Code RFID",
+              enable: false,
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(
+            height: 1,
+            child: Center(
+              child: Container(
+                height: 1,
+                color: Theme.of(context).cursorColor,
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
           SizedBox(
             child: buildTextBox(
               "Titre",
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 20),
           SizedBox(
             child: buildTextBox(
-              "Réf Emprunt",
+              "Référence emprunt",
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 20),
           SizedBox(
             child: buildTextBox(
               "Observation",
+              maxLines: 4,
             ),
           ),
           SizedBox(height: 40),

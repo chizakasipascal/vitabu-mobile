@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vitabu/src/views/widgets/button.dart';
+import 'package:vitabu/src/views/widgets/scan_button.dart';
 import 'package:vitabu/src/views/widgets/text_box.dart';
 
 class EmpruntScreen extends StatefulWidget {
@@ -39,13 +40,36 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(30, 30, 30, 10),
         children: [
+          ScanButton(
+            caption: "Emprunt",
+            onTap: () {},
+          ),
+          SizedBox(
+            height: 20,
+            child: Center(
+              child: Container(
+                height: 1,
+                color: Theme.of(context).cursorColor,
+              ),
+            ),
+          ),
           SizedBox(
             child: buildTextBox(
               "Code RFID",
+              enable: false,
             ),
           ),
-          SizedBox(height: 16),
-          Container(
+          SizedBox(
+            height: 1,
+            child: Center(
+              child: Container(
+                height: 1,
+                color: Theme.of(context).cursorColor,
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          /*Container(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5.0),
@@ -62,15 +86,44 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
               items: _dropDownMenuItems,
               onChanged: _changedDropDownItem,
             ),
+          ),*/
+          SizedBox(
+            child: buildTextBox(
+              "Code abonné",
+              enable: false,
+            ),
           ),
-          SizedBox(height: 16),
+          SizedBox(
+            height: 1,
+            child: Center(
+              child: Container(
+                height: 1,
+                color: Theme.of(context).cursorColor,
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Expanded(
                 flex: 2,
-                child: buildTextBox(
-                  "Quantité",
+                child: Column(
+                  children: [
+                    buildTextBox(
+                      "Quantité",
+                      enable: false,
+                    ),
+                    SizedBox(
+                      height: 1,
+                      child: Center(
+                        child: Container(
+                          height: 1,
+                          color: Theme.of(context).cursorColor,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Expanded(

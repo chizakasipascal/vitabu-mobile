@@ -70,10 +70,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   PopupMenuItem<String>(
                     child: FlatButton(
                       child: const Text("Déconnection"),
-                      onPressed: () => Navigator.pushReplacementNamed(
-                        context,
-                        Routes.login,
-                      ),
+                      onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                          context, Routes.login, (r) => false),
                     ),
                   ),
                   PopupMenuItem<String>(
