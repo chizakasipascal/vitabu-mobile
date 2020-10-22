@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 import 'package:vitabu/src/views/widgets/button.dart';
 import 'package:vitabu/src/views/widgets/scan_button.dart';
 import 'package:vitabu/src/views/widgets/text_box.dart';
@@ -34,6 +35,26 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
     });
   }
 
+  void stopNFC() {
+    FlutterNfcReader.stop().then((response) {
+      print("XXXXXXXXXXXXXXXXXXXXXXXX STOP : ${response.status.toString()}");
+    });
+  }
+
+  void readNFC() {
+    FlutterNfcReader.read().then((onData) {
+      print("XXXXXXXXXXXXXXXXXXXXXXXX ID : ${onData.id.toString()}");
+      print("XXXXXXXXXXXXXXXXXXXXXXXX CONTENT : ${onData.content.toString()}");
+      print("XXXXXXXXXXXXXXXXXXXXXXXX STATUS : ${onData.status.toString()}");
+    });
+
+    /*FlutterNfcReader.onTagDiscovered().listen((onData) {
+      print("XXXXXXXXXXXXXXXXXXXXXXXX ID : ${onData.id.toString()}");
+      print("XXXXXXXXXXXXXXXXXXXXXXXX CONTENT : ${onData.content.toString()}");
+      print("XXXXXXXXXXXXXXXXXXXXXXXX STATUS : ${onData.status.toString()}");
+    });*/
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,7 +63,10 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
         children: [
           ScanButton(
             caption: "Emprunt",
-            onTap: () {},
+            onTap: () {
+              print("START SCANNNNNIING");
+              readNFC();
+            },
           ),
           SizedBox(
             height: 20,
