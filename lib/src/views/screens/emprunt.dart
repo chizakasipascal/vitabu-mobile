@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
+import 'package:vitabu/src/bloc/scan/scan_bloc.dart';
 import 'package:vitabu/src/views/widgets/button.dart';
 import 'package:vitabu/src/views/widgets/scan_button.dart';
 import 'package:vitabu/src/views/widgets/text_box.dart';
@@ -12,6 +14,7 @@ class EmpruntScreen extends StatefulWidget {
 }
 
 class _EmpruntScreenState extends State<EmpruntScreen> {
+  TextEditingController _code = TextEditingController();
   final List _numberList = ["Number 1", "Number 2", "Number 3", "Number 4"];
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentNumber;
@@ -57,43 +60,58 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(30, 30, 30, 10),
-        children: [
-          ScanButton(
-            caption: "Emprunt",
-            onTap: () {
-              print("START SCANNNNNIING");
-              readNFC();
-            },
-          ),
-          SizedBox(
-            height: 20,
-            child: Center(
-              child: Container(
-                height: 1,
-                color: Theme.of(context).cursorColor,
+    return BlocListener(
+      cubit: BlocProvider.of<ScanBloc>(context),
+      listener: (context, state) {
+        if (state is ScanReading) {
+          setState(() {
+            _code.text = state.content;
+          });
+        }
+      },
+      child: Container(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(30, 30, 30, 10),
+          children: [
+            BlocBuilder<ScanBloc, ScanState>(
+              cubit: BlocProvider.of<ScanBloc>(context),
+              builder: (context, state) {
+                return ScanButton(
+                  caption: "Emprunt",
+                  onTap: () {
+                    print("START SCANNNNNIING");
+                    BlocProvider.of<ScanBloc>(context).add(StartScan());
+                  },
+                );
+              },
+            ),
+            SizedBox(
+              height: 20,
+              child: Center(
+                child: Container(
+                  height: 1,
+                  color: Theme.of(context).cursorColor,
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            child: buildTextBox(
-              "Code RFID",
-              enable: false,
-            ),
-          ),
-          SizedBox(
-            height: 1,
-            child: Center(
-              child: Container(
-                height: 1,
-                color: Theme.of(context).cursorColor,
+            SizedBox(
+              child: buildTextBox(
+                "Code RFID",
+                enable: false,
+                controller: _code,
               ),
             ),
-          ),
-          SizedBox(height: 20),
-          /*Container(
+            SizedBox(
+              height: 1,
+              child: Center(
+                child: Container(
+                  height: 1,
+                  color: Theme.of(context).cursorColor,
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            /*Container(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5.0),
@@ -111,73 +129,74 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
               onChanged: _changedDropDownItem,
             ),
           ),*/
-          SizedBox(
-            child: buildTextBox(
-              "Code abonné",
-              enable: false,
-            ),
-          ),
-          SizedBox(
-            height: 1,
-            child: Center(
-              child: Container(
-                height: 1,
-                color: Theme.of(context).cursorColor,
+            SizedBox(
+              child: buildTextBox(
+                "Code abonné",
+                enable: false,
               ),
             ),
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                flex: 2,
-                child: Column(
-                  children: [
-                    buildTextBox(
-                      "Quantité",
-                      enable: false,
-                    ),
-                    SizedBox(
-                      height: 1,
-                      child: Center(
-                        child: Container(
-                          height: 1,
-                          color: Theme.of(context).cursorColor,
+            SizedBox(
+              height: 1,
+              child: Center(
+                child: Container(
+                  height: 1,
+                  color: Theme.of(context).cursorColor,
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      buildTextBox(
+                        "Quantité",
+                        enable: false,
+                      ),
+                      SizedBox(
+                        height: 1,
+                        child: Center(
+                          child: Container(
+                            height: 1,
+                            color: Theme.of(context).cursorColor,
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.remove_circle,
+                      size: 38,
                     ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.remove_circle,
-                    size: 38,
+                    onPressed: () {},
                   ),
-                  onPressed: () {},
                 ),
-              ),
-              Expanded(
-                flex: 1,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.add_circle,
-                    size: 38,
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.add_circle,
+                      size: 38,
+                    ),
+                    onPressed: () {},
                   ),
-                  onPressed: () {},
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 40),
-          Button(
-            caption: "VALIDER",
-            onPressed: () {},
-          ),
-        ],
+              ],
+            ),
+            SizedBox(height: 40),
+            Button(
+              caption: "VALIDER",
+              onPressed: () {},
+            ),
+          ],
+        ),
       ),
     );
   }

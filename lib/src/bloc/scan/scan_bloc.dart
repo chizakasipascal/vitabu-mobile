@@ -16,15 +16,17 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
     ScanEvent event,
   ) async* {
     if (event is StartScan)
-      _mapStartScanToState();
-    else if (event is StopScan) _mapStopScanToState();
+      yield* _mapStartScanToState();
+    else if (event is StopScan) yield* _mapStopScanToState();
   }
 
   Stream<ScanState> _mapStartScanToState() async* {
+    print("LSDKJFSDLKJKLSDJFKLSDFJKLJKLJ");
     yield ScanInProgress();
     try {
       final response = await FlutterNfcReader.read();
       if (response != null) {
+        print("XXXXXXX L'objet n'est pas null");
         if (response.status == NFCStatus.reading)
           yield ScanReading(content: response.id);
         else
