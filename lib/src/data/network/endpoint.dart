@@ -3,7 +3,7 @@ class EndPoint {
 
   static const String _baseUrl = "http://127.0.0.1:9000/api";
 
-  static const String getListAbonne = _baseUrl + "/emprunt";
+  static const String emprunt = _baseUrl + "/emprunt";
   static const String getListAuteur = _baseUrl + "/auteur";
   static const String getListType = _baseUrl + "/type";
   static const String getListEditeur = _baseUrl + "/editeur";
