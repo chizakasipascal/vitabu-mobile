@@ -7,10 +7,10 @@ abstract class EmpruntEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadOuvrage extends EmpruntEvent {
+class LoadCodeEmprunt extends EmpruntEvent {
   final String code;
 
-  LoadOuvrage({@required this.code});
+  LoadCodeEmprunt({@required this.code});
 
   @override
   List<Object> get props => [code];

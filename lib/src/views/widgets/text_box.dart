@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 typedef String Validator(string);
 typedef void OnSaved(string);
+typedef void OnChanged(string);
 
 Widget buildTextBox(String hint,
     {Icon icon,
@@ -10,6 +11,7 @@ Widget buildTextBox(String hint,
     String label,
     Validator validator,
     OnSaved onSaved,
+    OnChanged onChanged,
     int maxLines = 1,
     TextInputType inputType = TextInputType.text,
     EdgeInsetsGeometry contentPadding =
@@ -31,6 +33,7 @@ Widget buildTextBox(String hint,
       prefixIcon: icon,
       suffixIcon: suffixIcon,
     ),
+    onChanged: onChanged,
     validator: validator,
     onSaved: onSaved,
   );

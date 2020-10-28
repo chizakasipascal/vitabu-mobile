@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
+import 'package:vitabu/src/bloc/emprunt/emprunt_bloc.dart';
 import 'package:vitabu/src/bloc/scan/scan_bloc.dart';
 import 'package:vitabu/src/views/widgets/button.dart';
 import 'package:vitabu/src/views/widgets/scan_button.dart';
@@ -15,6 +16,12 @@ class EmpruntScreen extends StatefulWidget {
 
 class _EmpruntScreenState extends State<EmpruntScreen> {
   TextEditingController _code = TextEditingController();
+  TextEditingController _quantite = TextEditingController();
+  TextEditingController _refAbonne = TextEditingController();
+
+  var codeNFC;
+  var mvt;
+
   final List _numberList = ["Number 1", "Number 2", "Number 3", "Number 4"];
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentNumber;
@@ -50,25 +57,24 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
       print("XXXXXXXXXXXXXXXXXXXXXXXX CONTENT : ${onData.content.toString()}");
       print("XXXXXXXXXXXXXXXXXXXXXXXX STATUS : ${onData.status.toString()}");
     });
-
-    /*FlutterNfcReader.onTagDiscovered().listen((onData) {
-      print("XXXXXXXXXXXXXXXXXXXXXXXX ID : ${onData.id.toString()}");
-      print("XXXXXXXXXXXXXXXXXXXXXXXX CONTENT : ${onData.content.toString()}");
-      print("XXXXXXXXXXXXXXXXXXXXXXXX STATUS : ${onData.status.toString()}");
-    });*/
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
-      cubit: BlocProvider.of<ScanBloc>(context),
-      listener: (context, state) {
-        if (state is ScanReading) {
-          setState(() {
-            _code.text = state.content;
-          });
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener(
+          cubit: BlocProvider.of<ScanBloc>(context),
+          listener: (context, state) {
+            if (state is ScanReading) {
+              codeNFC = state.content;
+              setState(() {
+                _code.text = codeNFC;
+              });
+            }
+          },
+        ),
+      ],
       child: Container(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(30, 30, 30, 10),
@@ -129,11 +135,28 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
               onChanged: _changedDropDownItem,
             ),
           ),*/
-            SizedBox(
-              child: buildTextBox(
-                "Code abonné",
-                enable: false,
-              ),
+            BlocBuilder<EmpruntBloc, EmpruntState>(
+              cubit: BlocProvider.of<EmpruntBloc>(context)
+                ..add(LoadCodeEmprunt(code: codeNFC)),
+              builder: (context, state) {
+                /*if (state is EmpruntReady) {
+                  mvt = state.mvt;
+                  setState(() {
+                    _refAbonne.text = state.mvt.reference;
+                  });
+                }*/
+
+                if (true) {}
+
+                return SizedBox(
+                  child: buildTextBox(
+                    "Code abonné",
+                    enable: false,
+                    controller: _refAbonne,
+                    onChanged: (text) {},
+                  ),
+                );
+              },
             ),
             SizedBox(
               height: 1,
@@ -155,6 +178,7 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
                       buildTextBox(
                         "Quantité",
                         enable: false,
+                        controller: _quantite,
                       ),
                       SizedBox(
                         height: 1,
@@ -175,7 +199,14 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
                       Icons.remove_circle,
                       size: 38,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        if (int.parse(_quantite.text) > 1) {
+                          _quantite.text =
+                              (int.parse(_quantite.text) - 1).toString();
+                        }
+                      });
+                    },
                   ),
                 ),
                 Expanded(
@@ -185,7 +216,16 @@ class _EmpruntScreenState extends State<EmpruntScreen> {
                       Icons.add_circle,
                       size: 38,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        if (_quantite.text.isNotEmpty)
+                          _quantite.text = "1";
+                        else if (int.parse(_quantite.text) >= 1) {
+                          _quantite.text =
+                              (int.parse(_quantite.text) + 1).toString();
+                        }
+                      });
+                    },
                   ),
                 ),
               ],

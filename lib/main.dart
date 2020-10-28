@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'src/app.dart';
+import 'src/bloc/emprunt/emprunt_bloc.dart';
 import 'src/bloc/scan/scan_bloc.dart';
 
 /// Obeserver d'état des blocs dans l'application
@@ -38,6 +39,9 @@ void main() async {
         providers: [
           BlocProvider<ScanBloc>(
             create: (context) => ScanBloc(),
+          ),
+          BlocProvider<EmpruntBloc>(
+            create: (context) => EmpruntBloc(),
           ),
         ],
         child: VitabuApp(),

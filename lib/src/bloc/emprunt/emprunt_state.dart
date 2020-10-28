@@ -18,6 +18,13 @@ class EmpruntReady extends EmpruntState {
   List<Object> get props => [mvt];
 }
 
-class EmpruntSuccess extends EmpruntState {}
+class EmpruntSuccess extends EmpruntState {
+  final Diagnostic diagnostic;
+
+  EmpruntSuccess({@required this.diagnostic});
+
+  @override
+  List<Object> get props => [diagnostic];
+}
 
 class EmpruntError extends EmpruntState {}

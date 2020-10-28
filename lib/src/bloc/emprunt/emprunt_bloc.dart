@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:vitabu/src/data/network/api/api_repository.dart';
+import 'package:vitabu/src/models/diagnostic/diagnostic.dart';
 import 'package:vitabu/src/models/emprunt/emprunt_body.dart';
 import 'package:vitabu/src/models/mouvement/mouvement.dart';
 
@@ -22,16 +23,18 @@ class EmpruntBloc extends Bloc<EmpruntEvent, EmpruntState> {
   Stream<EmpruntState> mapEventToState(
     EmpruntEvent event,
   ) async* {
-    if (event is SaveEmprunt) yield* _mapSaveEmpruntToState(event);
-    //else if (event is LoadOuvrage) yield* _mapLoadOuvrageToState(event);
+    if (event is LoadCodeEmprunt)
+      yield* _mapLoadCodeEmpruntToState(event);
+    else if (event is SaveEmprunt) yield* _mapSaveEmpruntToState(event);
   }
 
-  /*Stream<EmpruntState> _mapLoadOuvrageToState(LoadOuvrage event) async* {
+  Stream<EmpruntState> _mapLoadCodeEmpruntToState(
+      LoadCodeEmprunt event) async* {
     try {
-      final response = await api.postEmprunt(event.code);
+      final response = await api.getCodeEmprunt(event.code);
       if (response != null) {
         if (response.status == 200)
-          yield EmpruntReady(mvt: null);
+          yield EmpruntReady(mvt: response);
         else
           yield EmpruntError();
       } else
@@ -39,14 +42,14 @@ class EmpruntBloc extends Bloc<EmpruntEvent, EmpruntState> {
     } catch (e) {
       yield EmpruntError();
     }
-  }*/
+  }
 
   Stream<EmpruntState> _mapSaveEmpruntToState(SaveEmprunt event) async* {
     try {
       final response = await api.postEmprunt(event.body);
       if (response != null) {
         if (response.status == 200)
-          yield EmpruntReady(mvt: null);
+          yield EmpruntSuccess(diagnostic: response);
         else
           yield EmpruntError();
       } else
