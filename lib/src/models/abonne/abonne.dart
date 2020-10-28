@@ -3,7 +3,7 @@ class Abonne {
   String nom;
   String postnom;
   String prenom;
-  int montant;
+  double montant;
 
   Abonne({this.numero, this.nom, this.postnom, this.prenom, this.montant});
 

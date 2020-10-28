@@ -18,6 +18,7 @@ dependencies:
   flutter_launcher_icons: ^0.8.1
   package_info: ^0.4.3
   equatable: ^1.2.5
+  flutter_typeahead: ^1.8.8
 
 dev_dependencies:
   flutter_test:

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:vitabu/src/data/network/api/api_repository.dart';
+import 'package:vitabu/src/data/api/api_repository.dart';
 import 'package:vitabu/src/models/diagnostic/diagnostic.dart';
 import 'package:vitabu/src/models/emprunt/emprunt_body.dart';
 import 'package:vitabu/src/models/mouvement/mouvement.dart';

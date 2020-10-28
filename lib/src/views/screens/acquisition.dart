@@ -6,6 +6,11 @@ import 'package:vitabu/src/views/widgets/text_box.dart';
 class AcquisitionScreen extends StatefulWidget {
   const AcquisitionScreen({Key key}) : super(key: key);
 
+  /*if (_code.text.isNotEmpty) {
+          BlocProvider.of<EmpruntBloc>(context)
+              .add(LoadCodeEmprunt(code: _code.text.toString()));
+        }*/
+
   @override
   _AcquisitionScreenState createState() => _AcquisitionScreenState();
 }

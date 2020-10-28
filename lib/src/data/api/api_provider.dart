@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:vitabu/src/data/network/dio/dio_client.dart';
+import 'package:vitabu/src/data/dio/dio_client.dart';
+import 'package:vitabu/src/models/abonne/list_abonne.dart';
 import 'package:vitabu/src/models/diagnostic/diagnostic.dart';
 import 'package:vitabu/src/models/emprunt/emprunt_body.dart';
 import 'package:vitabu/src/models/mouvement/mouvement.dart';
@@ -44,6 +45,24 @@ class ApiProvider {
       return Diagnostic.fromJson(result);
     } catch (e) {
       print("ERROR postEmprunt : ${e.toString()}");
+      throw e;
+    }
+  }
+
+  Future<ListAbonne> getAbonnes() async {
+    try {
+      final result = await _dioClient.get(
+        EndPoint.emprunt,
+        options: Options(
+          contentType: Headers.jsonContentType,
+          headers: {
+            "Accept": "application/json",
+          },
+        ),
+      );
+      return ListAbonne.fromJson(result);
+    } catch (e) {
+      print("ERROR getAbonnes : ${e.toString()}");
       throw e;
     }
   }

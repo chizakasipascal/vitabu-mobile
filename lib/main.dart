@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'src/app.dart';
 import 'src/bloc/emprunt/emprunt_bloc.dart';
-import 'src/bloc/scan/scan_bloc.dart';
 
 /// Obeserver d'état des blocs dans l'application
 class SimpleBlocObserver extends BlocObserver {
@@ -37,9 +36,6 @@ void main() async {
     runApp(
       MultiBlocProvider(
         providers: [
-          BlocProvider<ScanBloc>(
-            create: (context) => ScanBloc(),
-          ),
           BlocProvider<EmpruntBloc>(
             create: (context) => EmpruntBloc(),
           ),
