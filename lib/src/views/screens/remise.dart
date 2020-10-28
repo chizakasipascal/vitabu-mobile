@@ -25,6 +25,7 @@ class _RemiseScreenState extends State<RemiseScreen> {
   ApiRepository _api = ApiRepository();
 
   var _asyncCall = false;
+  var mvt;
 
   void stopNFC() {
     FlutterNfcReader.stop().then((response) {
@@ -58,6 +59,13 @@ class _RemiseScreenState extends State<RemiseScreen> {
 
       setState(() {
         _code.text = onData.id.toString();
+        if (_code.text.isNotEmpty) {
+          _api.getCodeEmprunt(_code.text).then((value) {
+            mvt = value;
+            _titre.text = mvt.titre;
+            _refEmprunt.text = mvt.reference;
+          });
+        }
       });
     });
   }
@@ -108,7 +116,7 @@ class _RemiseScreenState extends State<RemiseScreen> {
             children: [
               ScanButton(
                 caption: "Remise",
-                onTap: () {},
+                onTap: () => readNFC(),
               ),
               SizedBox(
                 height: 40,
@@ -123,18 +131,29 @@ class _RemiseScreenState extends State<RemiseScreen> {
                 child: buildTextBox(
                   "Code RFID",
                   enable: false,
+                  controller: _code,
+                  validator: (x) =>
+                      x.isEmpty || x == null ? "Le code ouvrage vide" : null,
                 ),
               ),
               SizedBox(height: 20),
               SizedBox(
                 child: buildTextBox(
                   "Titre",
+                  enable: false,
+                  controller: _titre,
+                  validator: (x) =>
+                      x.isEmpty || x == null ? "Le titre vide" : null,
                 ),
               ),
               SizedBox(height: 20),
               SizedBox(
                 child: buildTextBox(
                   "Référence emprunt",
+                  enable: false,
+                  controller: _refEmprunt,
+                  validator: (x) =>
+                      x.isEmpty || x == null ? "Le code emprunt vide" : null,
                 ),
               ),
               SizedBox(height: 20),
@@ -142,6 +161,9 @@ class _RemiseScreenState extends State<RemiseScreen> {
                 child: buildTextBox(
                   "Observation",
                   maxLines: 4,
+                  controller: _observation,
+                  validator: (x) =>
+                      x.isEmpty || x == null ? "Le observation vide" : null,
                 ),
               ),
               SizedBox(height: 40),
