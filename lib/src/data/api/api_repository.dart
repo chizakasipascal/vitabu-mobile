@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:vitabu/src/data/dio/dio_client.dart';
 import 'package:vitabu/src/models/abonne/list_abonne.dart';
+import 'package:vitabu/src/models/data/list_data.dart';
 import 'package:vitabu/src/models/diagnostic/diagnostic.dart';
 import 'package:vitabu/src/models/mouvement/emprunt_body.dart';
 import 'package:vitabu/src/models/mouvement/mouvement.dart';
@@ -21,4 +22,12 @@ class ApiRepository {
 
   Future<Diagnostic> postRemise(RemiseBody body) =>
       _apiProvider.postRemise(body);
+
+  Future<ListData> getAuteurs() => _apiProvider.getAuteurs();
+
+  Future<ListData> getClasses() => _apiProvider.getClasses();
+
+  Future<ListData> getEditeurs() => _apiProvider.getEditeurs();
+
+  Future<ListData> getTypes() => _apiProvider.getTypes();
 }

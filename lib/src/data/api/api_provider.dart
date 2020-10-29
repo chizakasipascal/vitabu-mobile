@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:vitabu/src/data/dio/dio_client.dart';
 import 'package:vitabu/src/models/abonne/list_abonne.dart';
+import 'package:vitabu/src/models/data/list_data.dart';
 import 'package:vitabu/src/models/diagnostic/diagnostic.dart';
 import 'package:vitabu/src/models/mouvement/emprunt_body.dart';
 import 'package:vitabu/src/models/mouvement/mouvement.dart';
@@ -83,6 +84,78 @@ class ApiProvider {
       return Diagnostic.fromJson(result);
     } catch (e) {
       print("ERROR postRemise : ${e.toString()}");
+      throw e;
+    }
+  }
+
+  Future<ListData> getAuteurs() async {
+    try {
+      final result = await _dioClient.get(
+        EndPoint.getListAuteur,
+        options: Options(
+          contentType: Headers.jsonContentType,
+          headers: {
+            "Accept": "application/json",
+          },
+        ),
+      );
+      return ListData.fromJson(result);
+    } catch (e) {
+      print("ERROR getAuteurs : ${e.toString()}");
+      throw e;
+    }
+  }
+
+  Future<ListData> getTypes() async {
+    try {
+      final result = await _dioClient.get(
+        EndPoint.getListType,
+        options: Options(
+          contentType: Headers.jsonContentType,
+          headers: {
+            "Accept": "application/json",
+          },
+        ),
+      );
+      return ListData.fromJson(result);
+    } catch (e) {
+      print("ERROR getTypes : ${e.toString()}");
+      throw e;
+    }
+  }
+
+  Future<ListData> getEditeurs() async {
+    try {
+      final result = await _dioClient.get(
+        EndPoint.getListEditeur,
+        options: Options(
+          contentType: Headers.jsonContentType,
+          headers: {
+            "Accept": "application/json",
+          },
+        ),
+      );
+      return ListData.fromJson(result);
+    } catch (e) {
+      print("ERROR getEditeurs : ${e.toString()}");
+      throw e;
+    }
+  }
+
+  Future<ListData> getClasses() async {
+    try {
+      final result = await _dioClient.get(
+        EndPoint.getListClasse,
+        options: Options(
+          contentType: Headers.jsonContentType,
+          headers: {
+            "Accept": "application/json",
+          },
+        ),
+      );
+      return ListData.fromJson(result);
+    } catch (e) {
+      print("ERROR getClasses : ${e.toString()}");
       throw e;
     }
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:vitabu/src/data/api/api_repository.dart';
 import 'package:vitabu/src/views/widgets/button.dart';
@@ -35,13 +37,122 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
   var _listClass;
   var _asyncCall = false;
 
-  List<dynamic> _getSuggestions(String query, int case) {
+  void stopNFC() {
+    FlutterNfcReader.stop().then((response) {
+      print("XXXXXXXXXXXXXXXXXXXXXXXX STOP : ${response.status.toString()}");
+    });
+  }
+
+  void _clearFields() {
+    _code.clear();
+    _titre.clear();
+    _auteur.clear();
+    _type.clear();
+    _editeur.clear();
+    _class.clear();
+    _isbn.clear();
+    _publication.clear();
+    _version.clear();
+    _page.clear();
+  }
+
+  void readNFC() {
+    Fluttertoast.showToast(
+      msg: "Scan en cours ...",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+      backgroundColor: Colors.black38,
+      textColor: Colors.black,
+      fontSize: 16.0,
+    );
+
+    _clearFields();
+
+    FlutterNfcReader.read().then((onData) {
+      print("XXXXXXXXXXXXXXXXXXXXXXXX ID : ${onData.id.toString()}");
+      print("XXXXXXXXXXXXXXXXXXXXXXXX CONTENT : ${onData.content.toString()}");
+      print("XXXXXXXXXXXXXXXXXXXXXXXX STATUS : ${onData.status.toString()}");
+
+      setState(() {
+        _code.text = onData.id.toString();
+      });
+    });
+  }
+
+  void _saveEmprunt() {
+    /*if (_formKey.currentState.validate()) {
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        _api
+            .postEmprunt(
+          EmpruntBody(
+            quantite: int.parse(_quantite.text),
+            refAbonne: int.parse(_refAbonne.text),
+            refOuvrage: _code.text,
+          ),
+        )
+            .then(
+              (value) {
+            Fluttertoast.showToast(
+              msg: value.message,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              backgroundColor: Colors.black38,
+              textColor: Colors.black,
+              fontSize: 16.0,
+            );
+            setState(() {
+              _asyncCall = false;
+              _clearFields();
+            });
+          },
+        );
+      });
+    }*/
+  }
+
+  List<dynamic> _getSuggestions(String query, int cas) {
     List<dynamic> matches = List<dynamic>();
-    //matches.addAll(_listAbonnes);
-    matches.retainWhere((e) =>
-    (e.nom.toLowerCase().contains(query.toLowerCase()) ||
-        e.postnom.toLowerCase().contains(query.toLowerCase())));
+
+    switch (cas) {
+      case 1:
+        matches.clear();
+        matches.addAll(_listAuteur);
+        matches.retainWhere(
+          (e) => (e.designation.toLowerCase().contains(query.toLowerCase())),
+        );
+        break;
+
+      case 2:
+        matches.clear();
+        matches.addAll(_listType);
+        matches.retainWhere(
+          (e) => (e.designation.toLowerCase().contains(query.toLowerCase())),
+        );
+        break;
+
+      case 3:
+        matches.clear();
+        matches.addAll(_listEditeur);
+        matches.retainWhere(
+          (e) => (e.designation.toLowerCase().contains(query.toLowerCase())),
+        );
+        break;
+
+      case 4:
+        matches.clear();
+        matches.addAll(_listClass);
+        matches.retainWhere(
+          (e) => (e.designation.toLowerCase().contains(query.toLowerCase())),
+        );
+        break;
+    }
     return matches;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    //_api.getAbonnes().then((value) => _listAbonnes = value.abonnes);
   }
 
   @override
@@ -70,7 +181,7 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
               children: [
                 ScanButton(
                   caption: "Nouvel ouvrage",
-                  onTap: () {},
+                  onTap: () => readNFC(),
                 ),
                 SizedBox(
                   height: 40,
@@ -97,7 +208,7 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
                     maxLines: 2,
                     controller: _titre,
                     validator: (x) =>
-                    x.isEmpty || x == null ? "Le titre vide" : null,
+                        x.isEmpty || x == null ? "Le titre vide" : null,
                   ),
                 ),
                 SizedBox(height: 20),
@@ -109,7 +220,7 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
                         filled: true,
                         fillColor: Colors.white,
                         contentPadding:
-                        const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
+                            const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
                         labelText: "Titre",
                         border: OutlineInputBorder(),
                       ),
@@ -126,11 +237,10 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
                       return suggestionsBox;
                     },
                     onSuggestionSelected: (suggestion) {
-                      
                       this._titre.text = suggestion.numero;
                     },
                     validator: (x) =>
-                    x.isEmpty || x == null ? "Le code abonné vide" : null,
+                        x.isEmpty || x == null ? "Le code abonné vide" : null,
                   ),
                 ),
                 SizedBox(
@@ -138,7 +248,7 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
                     "Auteur",
                     controller: _code,
                     validator: (x) =>
-                    x.isEmpty || x == null ? "Le code ouvrage vide" : null,
+                        x.isEmpty || x == null ? "Le code ouvrage vide" : null,
                   ),
                 ),
                 SizedBox(height: 20),
