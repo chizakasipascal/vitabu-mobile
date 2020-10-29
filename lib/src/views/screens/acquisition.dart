@@ -4,6 +4,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:vitabu/src/data/api/api_repository.dart';
+import 'package:vitabu/src/models/data/acquisition.dart';
 import 'package:vitabu/src/views/widgets/button.dart';
 import 'package:vitabu/src/views/widgets/scan_button.dart';
 import 'package:vitabu/src/views/widgets/text_box.dart';
@@ -30,6 +31,7 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
   TextEditingController _page = TextEditingController();
 
   ApiRepository _api = ApiRepository();
+  Acquisition _acq = Acquisition();
 
   var _listAuteur;
   var _listType;
@@ -79,8 +81,8 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
     });
   }
 
-  void _saveEmprunt() {
-    /*if (_formKey.currentState.validate()) {
+  void _saveAcquisition() {
+    if (_formKey.currentState.validate()) {
       Future.delayed(Duration(seconds: 2)).then((value) {
         _api
             .postEmprunt(
@@ -91,7 +93,7 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
           ),
         )
             .then(
-              (value) {
+          (value) {
             Fluttertoast.showToast(
               msg: value.message,
               toastLength: Toast.LENGTH_LONG,
@@ -107,7 +109,7 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
           },
         );
       });
-    }*/
+    }
   }
 
   List<dynamic> _getSuggestions(String query, int cas) {
@@ -152,7 +154,10 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
   @override
   void initState() {
     super.initState();
-    //_api.getAbonnes().then((value) => _listAbonnes = value.abonnes);
+    _api.getAuteurs().then((value) => _listAuteur = value.data);
+    _api.getTypes().then((value) => _listType = value.data);
+    _api.getEditeurs().then((value) => _listEditeur = value.data);
+    _api.getClasses().then((value) => _listClass = value.data);
   }
 
   @override
@@ -176,137 +181,232 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
         body: ModalProgressHUD(
           inAsyncCall: _asyncCall,
           child: Container(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(30, 30, 30, 10),
-              children: [
-                ScanButton(
-                  caption: "Nouvel ouvrage",
-                  onTap: () => readNFC(),
-                ),
-                SizedBox(
-                  height: 40,
-                  child: Center(
-                    child: Container(
-                      height: 1,
-                      color: Theme.of(context).cursorColor,
-                    ),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(30, 30, 30, 10),
+                children: [
+                  ScanButton(
+                    caption: "Nouvel ouvrage",
+                    onTap: () => readNFC(),
                   ),
-                ),
-                SizedBox(
-                  child: buildTextBox(
-                    "Code RFID",
-                    enable: false,
-                    controller: _code,
-                    validator: (x) =>
-                        x.isEmpty || x == null ? "Le code ouvrage vide" : null,
-                  ),
-                ),
-                SizedBox(height: 20),
-                SizedBox(
-                  child: buildTextBox(
-                    "Titre",
-                    maxLines: 2,
-                    controller: _titre,
-                    validator: (x) =>
-                        x.isEmpty || x == null ? "Le titre vide" : null,
-                  ),
-                ),
-                SizedBox(height: 20),
-                SizedBox(
-                  child: TypeAheadFormField(
-                    textFieldConfiguration: TextFieldConfiguration(
-                      controller: _auteur,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
-                        labelText: "Titre",
-                        border: OutlineInputBorder(),
+                  SizedBox(
+                    height: 40,
+                    child: Center(
+                      child: Container(
+                        height: 1,
+                        color: Theme.of(context).cursorColor,
                       ),
                     ),
-                    suggestionsCallback: (pattern) {
-                      return _getSuggestions(pattern, 1);
-                    },
-                    itemBuilder: (context, suggestion) {
-                      return ListTile(
-                        title: Text("${suggestion.numero}"),
-                      );
-                    },
-                    transitionBuilder: (context, suggestionsBox, controller) {
-                      return suggestionsBox;
-                    },
-                    onSuggestionSelected: (suggestion) {
-                      this._titre.text = suggestion.numero;
-                    },
-                    validator: (x) =>
-                        x.isEmpty || x == null ? "Le code abonné vide" : null,
                   ),
-                ),
-                SizedBox(
-                  child: buildTextBox(
-                    "Auteur",
-                    controller: _code,
-                    validator: (x) =>
-                        x.isEmpty || x == null ? "Le code ouvrage vide" : null,
-                  ),
-                ),
-                SizedBox(height: 20),
-                SizedBox(
-                  child: buildTextBox(
-                    "Type",
-                  ),
-                ),
-                SizedBox(height: 20),
-                SizedBox(
-                  child: buildTextBox(
-                    "Editeur",
-                  ),
-                ),
-                SizedBox(height: 20),
-                SizedBox(
-                  child: buildTextBox(
-                    "Classification",
-                  ),
-                ),
-                SizedBox(height: 20),
-                SizedBox(
-                  child: buildTextBox(
-                    "ISBN",
-                  ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: buildTextBox(
-                        "Publication",
-                      ),
+                  SizedBox(
+                    child: buildTextBox(
+                      "Code RFID",
+                      enable: false,
+                      controller: _code,
+                      validator: (x) => x.isEmpty || x == null
+                          ? "Le code ouvrage vide"
+                          : null,
                     ),
-                    SizedBox(width: 6),
-                    Expanded(
-                      flex: 4,
-                      child: buildTextBox(
-                        "Version",
-                      ),
+                  ),
+                  SizedBox(height: 20),
+                  SizedBox(
+                    child: buildTextBox(
+                      "Titre",
+                      maxLines: 2,
+                      controller: _titre,
+                      validator: (x) =>
+                          x.isEmpty || x == null ? "Le titre vide" : null,
                     ),
-                    SizedBox(width: 6),
-                    Expanded(
-                      flex: 3,
-                      child: buildTextBox(
-                        "Page",
+                  ),
+                  SizedBox(height: 20),
+                  SizedBox(
+                    child: TypeAheadFormField(
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _auteur,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
+                          labelText: "Auteur",
+                          border: OutlineInputBorder(),
+                        ),
                       ),
+                      suggestionsCallback: (pattern) {
+                        return _getSuggestions(pattern, 1);
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text("${suggestion.designation}"),
+                        );
+                      },
+                      transitionBuilder: (context, suggestionsBox, controller) {
+                        return suggestionsBox;
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        this._acq.auteur = suggestion.id;
+                        this._auteur.text = suggestion.designation;
+                      },
+                      validator: (x) => x.isEmpty || x == null
+                          ? "Le nom de l'auteur vide"
+                          : null,
                     ),
-                  ],
-                ),
-                SizedBox(height: 40),
-                Button(
-                  caption: "VALIDER",
-                  onPressed: () {},
-                ),
-              ],
+                  ),
+                  SizedBox(height: 20),
+                  SizedBox(
+                    child: TypeAheadFormField(
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _type,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
+                          labelText: "Type",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      suggestionsCallback: (pattern) {
+                        return _getSuggestions(pattern, 2);
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text("${suggestion.designation}"),
+                        );
+                      },
+                      transitionBuilder: (context, suggestionsBox, controller) {
+                        return suggestionsBox;
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        this._acq.type = suggestion.id;
+                        this._type.text = suggestion.designation;
+                      },
+                      validator: (x) => x.isEmpty || x == null
+                          ? "La designation de type vide"
+                          : null,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  SizedBox(
+                    child: TypeAheadFormField(
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _editeur,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
+                          labelText: "Editeur",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      suggestionsCallback: (pattern) {
+                        return _getSuggestions(pattern, 3);
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text("${suggestion.designation}"),
+                        );
+                      },
+                      transitionBuilder: (context, suggestionsBox, controller) {
+                        return suggestionsBox;
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        this._acq.editeur = suggestion.id;
+                        this._editeur.text = suggestion.designation;
+                      },
+                      validator: (x) => x.isEmpty || x == null
+                          ? "La designation de l'éditeur vide"
+                          : null,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  SizedBox(
+                    child: TypeAheadFormField(
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _class,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
+                          labelText: "Classification",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      suggestionsCallback: (pattern) {
+                        return _getSuggestions(pattern, 4);
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text("${suggestion.designation}"),
+                        );
+                      },
+                      transitionBuilder: (context, suggestionsBox, controller) {
+                        return suggestionsBox;
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        this._acq.classe = suggestion.id;
+                        this._class.text = suggestion.designation;
+                      },
+                      validator: (x) => x.isEmpty || x == null
+                          ? "La classification vide"
+                          : null,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  SizedBox(
+                    child: buildTextBox(
+                      "ISBN",
+                      controller: _isbn,
+                      validator: (x) =>
+                          x.isEmpty || x == null ? "Le numéro ISBN vide" : null,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: buildTextBox(
+                          "Publication",
+                          controller: _publication,
+                          validator: (x) => x.isEmpty || x == null
+                              ? "La publication vide"
+                              : null,
+                        ),
+                      ),
+                      SizedBox(width: 6),
+                      Expanded(
+                        flex: 4,
+                        child: buildTextBox(
+                          "Version",
+                          controller: _version,
+                          validator: (x) =>
+                              x.isEmpty || x == null ? "La version vide" : null,
+                        ),
+                      ),
+                      SizedBox(width: 6),
+                      Expanded(
+                        flex: 3,
+                        child: buildTextBox(
+                          "Pages",
+                          controller: _page,
+                          validator: (x) =>
+                              x.isEmpty || x == null ? "Vide" : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 40),
+                  Button(
+                    caption: "VALIDER",
+                    onPressed: () => _saveAcquisition(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
