@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:vitabu/src/data/api/api_repository.dart';
 import 'package:vitabu/src/views/widgets/button.dart';
 import 'package:vitabu/src/views/widgets/scan_button.dart';
 import 'package:vitabu/src/views/widgets/text_box.dart';
@@ -11,29 +14,34 @@ class AcquisitionScreen extends StatefulWidget {
 }
 
 class _AcquisitionScreenState extends State<AcquisitionScreen> {
-  final List _numberList = ["Number 1", "Number 2", "Number 3", "Number 4"];
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<DropdownMenuItem<String>> _dropDownMenuItems;
+  TextEditingController _code = TextEditingController();
+  TextEditingController _titre = TextEditingController();
+  TextEditingController _auteur = TextEditingController();
+  TextEditingController _type = TextEditingController();
+  TextEditingController _editeur = TextEditingController();
+  TextEditingController _class = TextEditingController();
+  TextEditingController _isbn = TextEditingController();
+  TextEditingController _publication = TextEditingController();
+  TextEditingController _version = TextEditingController();
+  TextEditingController _page = TextEditingController();
 
-  String _currentNumber;
+  ApiRepository _api = ApiRepository();
 
-  List<DropdownMenuItem<String>> getDropDownMenuItems() {
-    List<DropdownMenuItem<String>> items = List();
-    for (String number in _numberList) {
-      items.add(
-        DropdownMenuItem(
-          value: number,
-          child: Text(number),
-        ),
-      );
-    }
-    return items;
-  }
+  var _listAuteur;
+  var _listType;
+  var _listEditeur;
+  var _listClass;
+  var _asyncCall = false;
 
-  void _changedDropDownItem(String selectedNumber) {
-    setState(() {
-      _currentNumber = selectedNumber;
-    });
+  List<dynamic> _getSuggestions(String query, int case) {
+    List<dynamic> matches = List<dynamic>();
+    //matches.addAll(_listAbonnes);
+    matches.retainWhere((e) =>
+    (e.nom.toLowerCase().contains(query.toLowerCase()) ||
+        e.postnom.toLowerCase().contains(query.toLowerCase())));
+    return matches;
   }
 
   @override
@@ -54,125 +62,142 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
             ),
           ],
         ),
-        body: Container(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(30, 30, 30, 10),
-            children: [
-              ScanButton(
-                caption: "Nouvel ouvrage",
-                onTap: () {},
-              ),
-              SizedBox(
-                height: 20,
-                child: Center(
-                  child: Container(
-                    height: 1,
-                    color: Theme.of(context).cursorColor,
-                  ),
+        body: ModalProgressHUD(
+          inAsyncCall: _asyncCall,
+          child: Container(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(30, 30, 30, 10),
+              children: [
+                ScanButton(
+                  caption: "Nouvel ouvrage",
+                  onTap: () {},
                 ),
-              ),
-              SizedBox(
-                child: buildTextBox(
-                  "Code RFID",
-                  enable: false,
-                ),
-              ),
-              SizedBox(
-                height: 1,
-                child: Center(
-                  child: Container(
-                    height: 1,
-                    color: Theme.of(context).cursorColor,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              SizedBox(
-                child: buildTextBox(
-                  "Titre",
-                  maxLines: 2,
-                ),
-              ),
-              SizedBox(height: 20),
-              /*Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.0),
-                  border: Border.all(
-                    color: Colors.black54,
-                    style: BorderStyle.solid,
-                    width: 0.80,
-                  ),
-                ),
-                child: DropdownButton(
-                  disabledHint: const Text("Auteur"),
-                  isExpanded: true,
-                  value: _currentNumber,
-                  items: _dropDownMenuItems,
-                  onChanged: _changedDropDownItem,
-                ),
-              ),*/
-              SizedBox(
-                child: buildTextBox(
-                  "Auteur",
-                ),
-              ),
-              SizedBox(height: 20),
-              SizedBox(
-                child: buildTextBox(
-                  "Type",
-                ),
-              ),
-              SizedBox(height: 20),
-              SizedBox(
-                child: buildTextBox(
-                  "Editeur",
-                ),
-              ),
-              SizedBox(height: 20),
-              SizedBox(
-                child: buildTextBox(
-                  "Classification",
-                ),
-              ),
-              SizedBox(height: 20),
-              SizedBox(
-                child: buildTextBox(
-                  "ISBN",
-                ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: buildTextBox(
-                      "Publication",
+                SizedBox(
+                  height: 40,
+                  child: Center(
+                    child: Container(
+                      height: 1,
+                      color: Theme.of(context).cursorColor,
                     ),
                   ),
-                  SizedBox(width: 6),
-                  Expanded(
-                    flex: 4,
-                    child: buildTextBox(
-                      "Version",
-                    ),
+                ),
+                SizedBox(
+                  child: buildTextBox(
+                    "Code RFID",
+                    enable: false,
+                    controller: _code,
+                    validator: (x) =>
+                        x.isEmpty || x == null ? "Le code ouvrage vide" : null,
                   ),
-                  SizedBox(width: 6),
-                  Expanded(
-                    flex: 3,
-                    child: buildTextBox(
-                      "Page",
-                    ),
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  child: buildTextBox(
+                    "Titre",
+                    maxLines: 2,
+                    controller: _titre,
+                    validator: (x) =>
+                    x.isEmpty || x == null ? "Le titre vide" : null,
                   ),
-                ],
-              ),
-              SizedBox(height: 40),
-              Button(
-                caption: "VALIDER",
-                onPressed: () {},
-              ),
-            ],
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  child: TypeAheadFormField(
+                    textFieldConfiguration: TextFieldConfiguration(
+                      controller: _auteur,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding:
+                        const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
+                        labelText: "Titre",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    suggestionsCallback: (pattern) {
+                      return _getSuggestions(pattern, 1);
+                    },
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text("${suggestion.numero}"),
+                      );
+                    },
+                    transitionBuilder: (context, suggestionsBox, controller) {
+                      return suggestionsBox;
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      
+                      this._titre.text = suggestion.numero;
+                    },
+                    validator: (x) =>
+                    x.isEmpty || x == null ? "Le code abonné vide" : null,
+                  ),
+                ),
+                SizedBox(
+                  child: buildTextBox(
+                    "Auteur",
+                    controller: _code,
+                    validator: (x) =>
+                    x.isEmpty || x == null ? "Le code ouvrage vide" : null,
+                  ),
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  child: buildTextBox(
+                    "Type",
+                  ),
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  child: buildTextBox(
+                    "Editeur",
+                  ),
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  child: buildTextBox(
+                    "Classification",
+                  ),
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  child: buildTextBox(
+                    "ISBN",
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: buildTextBox(
+                        "Publication",
+                      ),
+                    ),
+                    SizedBox(width: 6),
+                    Expanded(
+                      flex: 4,
+                      child: buildTextBox(
+                        "Version",
+                      ),
+                    ),
+                    SizedBox(width: 6),
+                    Expanded(
+                      flex: 3,
+                      child: buildTextBox(
+                        "Page",
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 40),
+                Button(
+                  caption: "VALIDER",
+                  onPressed: () {},
+                ),
+              ],
+            ),
           ),
         ),
       ),
