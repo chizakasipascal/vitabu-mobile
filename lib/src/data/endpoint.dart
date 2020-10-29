@@ -10,4 +10,5 @@ class EndPoint {
   static const String getListType = _baseUrl + "/type";
   static const String getListEditeur = _baseUrl + "/editeur";
   static const String getListClasse = _baseUrl + "/classe";
+  static const String acquisition = _baseUrl + "/ouvrage";
 }

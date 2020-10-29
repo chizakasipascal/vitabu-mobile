@@ -159,4 +159,23 @@ class ApiProvider {
       throw e;
     }
   }
+
+  Future<Diagnostic> postAcquisition(EmpruntBody body) async {
+    try {
+      final result = await _dioClient.post(
+        EndPoint.acquisition,
+        data: body.toMap(),
+        options: Options(
+          contentType: Headers.jsonContentType,
+          headers: {
+            "Accept": "application/json",
+          },
+        ),
+      );
+      return Diagnostic.fromJson(result);
+    } catch (e) {
+      print("ERROR postEmprunt : ${e.toString()}");
+      throw e;
+    }
+  }
 }
