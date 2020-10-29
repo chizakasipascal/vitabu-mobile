@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:vitabu/src/data/dio/dio_client.dart';
 import 'package:vitabu/src/models/abonne/list_abonne.dart';
 import 'package:vitabu/src/models/diagnostic/diagnostic.dart';
+import 'package:vitabu/src/models/mouvement/emprunt_body.dart';
 import 'package:vitabu/src/models/mouvement/mouvement.dart';
-
-import 'file:///D:/Ardin/Projects/Mobile/vitabu-mobile/lib/src/models/mouvement/emprunt_body.dart';
+import 'package:vitabu/src/models/mouvement/remise_body.dart';
 
 import '../endpoint.dart';
 
@@ -68,10 +68,10 @@ class ApiProvider {
     }
   }
 
-  Future<Diagnostic> postRemise(EmpruntBody body) async {
+  Future<Diagnostic> postRemise(RemiseBody body) async {
     try {
       final result = await _dioClient.post(
-        EndPoint.emprunt,
+        EndPoint.remise,
         data: body.toMap(),
         options: Options(
           contentType: Headers.jsonContentType,
@@ -82,7 +82,7 @@ class ApiProvider {
       );
       return Diagnostic.fromJson(result);
     } catch (e) {
-      print("ERROR postEmprunt : ${e.toString()}");
+      print("ERROR postRemise : ${e.toString()}");
       throw e;
     }
   }

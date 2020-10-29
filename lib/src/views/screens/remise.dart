@@ -3,6 +3,7 @@ import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:vitabu/src/data/api/api_repository.dart';
+import 'package:vitabu/src/models/mouvement/remise_body.dart';
 import 'package:vitabu/src/views/widgets/button.dart';
 import 'package:vitabu/src/views/widgets/scan_button.dart';
 import 'package:vitabu/src/views/widgets/text_box.dart';
@@ -74,11 +75,11 @@ class _RemiseScreenState extends State<RemiseScreen> {
     if (_formKey.currentState.validate()) {
       Future.delayed(Duration(seconds: 2)).then((value) {
         _api
-            .postR(
-          EmpruntBody(
-            quantite: int.parse(_quantite.text),
-            observation: int.parse(_refAbonne.text),
-            reference: _code.text,
+            .postRemise(
+          RemiseBody(
+            quantite: 1,
+            observation: _observation.text,
+            reference: int.parse(mvt.code.toString()),
           ),
         )
             .then(
@@ -169,7 +170,12 @@ class _RemiseScreenState extends State<RemiseScreen> {
               SizedBox(height: 40),
               Button(
                 caption: "VALIDER",
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    _asyncCall = true;
+                  });
+                  _saveRemise();
+                },
               ),
             ],
           ),

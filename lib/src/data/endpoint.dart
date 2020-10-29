@@ -5,6 +5,7 @@ class EndPoint {
 
   static const String emprunt = _baseUrl + "/emprunt";
   static const String getCode = _baseUrl + "/remise";
+  static const String remise = _baseUrl + "/remise";
   static const String getListAuteur = _baseUrl + "/auteur";
   static const String getListType = _baseUrl + "/type";
   static const String getListEditeur = _baseUrl + "/editeur";

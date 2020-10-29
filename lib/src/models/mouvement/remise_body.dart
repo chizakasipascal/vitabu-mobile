@@ -1,6 +1,6 @@
 class RemiseBody {
   int quantite;
-  String reference;
+  int reference;
   String observation;
 
   RemiseBody({this.quantite, this.reference, this.observation});
