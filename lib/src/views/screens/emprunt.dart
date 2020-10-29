@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:vitabu/src/data/api/api_repository.dart';
 import 'package:vitabu/src/models/abonne/abonne.dart';
-import 'package:vitabu/src/models/emprunt/emprunt_body.dart';
+import 'file:///D:/Ardin/Projects/Mobile/vitabu-mobile/lib/src/models/mouvement/emprunt_body.dart';
 import 'package:vitabu/src/views/widgets/button.dart';
 import 'package:vitabu/src/views/widgets/scan_button.dart';
 import 'package:vitabu/src/views/widgets/text_box.dart';

@@ -71,14 +71,14 @@ class _RemiseScreenState extends State<RemiseScreen> {
   }
 
   void _saveRemise() {
-    /*if (_formKey.currentState.validate()) {
+    if (_formKey.currentState.validate()) {
       Future.delayed(Duration(seconds: 2)).then((value) {
         _api
-            .postEmprunt(
+            .postR(
           EmpruntBody(
             quantite: int.parse(_quantite.text),
-            refAbonne: int.parse(_refAbonne.text),
-            refOuvrage: _code.text,
+            observation: int.parse(_refAbonne.text),
+            reference: _code.text,
           ),
         )
             .then(
@@ -98,7 +98,7 @@ class _RemiseScreenState extends State<RemiseScreen> {
           },
         );
       });
-    }*/
+    }
   }
 
   @override

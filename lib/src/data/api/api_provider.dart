@@ -2,8 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:vitabu/src/data/dio/dio_client.dart';
 import 'package:vitabu/src/models/abonne/list_abonne.dart';
 import 'package:vitabu/src/models/diagnostic/diagnostic.dart';
-import 'package:vitabu/src/models/emprunt/emprunt_body.dart';
 import 'package:vitabu/src/models/mouvement/mouvement.dart';
+
+import 'file:///D:/Ardin/Projects/Mobile/vitabu-mobile/lib/src/models/mouvement/emprunt_body.dart';
 
 import '../endpoint.dart';
 
