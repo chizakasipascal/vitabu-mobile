@@ -1,5 +1,5 @@
 class AcquisitionBody {
-  int code;
+  String code;
   String titre;
   String isbn;
   String publication;

@@ -3,6 +3,7 @@ import 'package:vitabu/src/data/dio/dio_client.dart';
 import 'package:vitabu/src/models/abonne/list_abonne.dart';
 import 'package:vitabu/src/models/data/list_data.dart';
 import 'package:vitabu/src/models/diagnostic/diagnostic.dart';
+import 'package:vitabu/src/models/mouvement/acquisition_body.dart';
 import 'package:vitabu/src/models/mouvement/emprunt_body.dart';
 import 'package:vitabu/src/models/mouvement/mouvement.dart';
 import 'package:vitabu/src/models/mouvement/remise_body.dart';
@@ -30,4 +31,7 @@ class ApiRepository {
   Future<ListData> getEditeurs() => _apiProvider.getEditeurs();
 
   Future<ListData> getTypes() => _apiProvider.getTypes();
+
+  Future<Diagnostic> postAcquisition(AcquisitionBody body) =>
+      _apiProvider.postAcquisition(body);
 }

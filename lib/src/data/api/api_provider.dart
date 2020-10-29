@@ -3,6 +3,7 @@ import 'package:vitabu/src/data/dio/dio_client.dart';
 import 'package:vitabu/src/models/abonne/list_abonne.dart';
 import 'package:vitabu/src/models/data/list_data.dart';
 import 'package:vitabu/src/models/diagnostic/diagnostic.dart';
+import 'package:vitabu/src/models/mouvement/acquisition_body.dart';
 import 'package:vitabu/src/models/mouvement/emprunt_body.dart';
 import 'package:vitabu/src/models/mouvement/mouvement.dart';
 import 'package:vitabu/src/models/mouvement/remise_body.dart';
@@ -160,7 +161,7 @@ class ApiProvider {
     }
   }
 
-  Future<Diagnostic> postAcquisition(EmpruntBody body) async {
+  Future<Diagnostic> postAcquisition(AcquisitionBody body) async {
     try {
       final result = await _dioClient.post(
         EndPoint.acquisition,
@@ -174,7 +175,7 @@ class ApiProvider {
       );
       return Diagnostic.fromJson(result);
     } catch (e) {
-      print("ERROR postEmprunt : ${e.toString()}");
+      print("ERROR postAcquisition : ${e.toString()}");
       throw e;
     }
   }

@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:vitabu/src/data/api/api_repository.dart';
 import 'package:vitabu/src/models/data/acquisition.dart';
+import 'package:vitabu/src/models/mouvement/acquisition_body.dart';
 import 'package:vitabu/src/views/widgets/button.dart';
 import 'package:vitabu/src/views/widgets/scan_button.dart';
 import 'package:vitabu/src/views/widgets/text_box.dart';
@@ -85,11 +86,18 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
     if (_formKey.currentState.validate()) {
       Future.delayed(Duration(seconds: 2)).then((value) {
         _api
-            .postEmprunt(
-          EmpruntBody(
-            quantite: int.parse(_quantite.text),
-            refAbonne: int.parse(_refAbonne.text),
-            refOuvrage: _code.text,
+            .postAcquisition(
+          AcquisitionBody(
+            code: _code.text,
+            titre: _titre.text,
+            publication: _publication.text,
+            version: _version.text,
+            isbn: _isbn.text.toUpperCase(),
+            page: int.parse(_page.text),
+            refType: _acq.type,
+            refClasse: _acq.classe,
+            refEditeur: _acq.editeur,
+            refAuteur: _acq.auteur,
           ),
         )
             .then(
@@ -180,6 +188,9 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
         ),
         body: ModalProgressHUD(
           inAsyncCall: _asyncCall,
+          progressIndicator: CircularProgressIndicator(
+            backgroundColor: Colors.black54,
+          ),
           child: Container(
             child: Form(
               key: _formKey,
@@ -373,6 +384,7 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
                         child: buildTextBox(
                           "Publication",
                           controller: _publication,
+                          inputType: TextInputType.number,
                           validator: (x) => x.isEmpty || x == null
                               ? "La publication vide"
                               : null,
@@ -383,6 +395,7 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
                         flex: 4,
                         child: buildTextBox(
                           "Version",
+                          inputType: TextInputType.number,
                           controller: _version,
                           validator: (x) =>
                               x.isEmpty || x == null ? "La version vide" : null,
@@ -393,6 +406,7 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
                         flex: 3,
                         child: buildTextBox(
                           "Pages",
+                          inputType: TextInputType.number,
                           controller: _page,
                           validator: (x) =>
                               x.isEmpty || x == null ? "Vide" : null,
@@ -403,7 +417,12 @@ class _AcquisitionScreenState extends State<AcquisitionScreen> {
                   SizedBox(height: 40),
                   Button(
                     caption: "VALIDER",
-                    onPressed: () => _saveAcquisition(),
+                    onPressed: () {
+                      setState(() {
+                        _asyncCall = true;
+                      });
+                      _saveAcquisition();
+                    },
                   ),
                 ],
               ),
